@@ -1,6 +1,5 @@
 import View from './View.js';
 import icons from 'url:../../img/icons.svg';
-import { Fraction } from 'fractional';
 
 class RecipeView extends View {
   _parentElement = document.querySelector('.recipe');
@@ -26,6 +25,49 @@ class RecipeView extends View {
       handler();
     });
   }
+
+  _formatFraction(value) {
+    if (!value) return '';
+
+    if (value % 1 === 0) return value.toString();
+
+    const decimal = value.toFixed(2);
+
+    const fractionMap = {
+      0.25: '1/4',
+      0.33: '1/3',
+      0.5: '1/2',
+      0.67: '2/3',
+      0.75: '3/4',
+    };
+
+    const roundedDecimal = Math.round(value * 100) / 100;
+
+    for (const [dec, frac] of Object.entries(fractionMap)) {
+      if (Math.abs(roundedDecimal - parseFloat(dec)) < 0.01) {
+        return frac;
+      }
+    }
+
+    const wholeNumber = Math.floor(value);
+    const decimalPart = value - wholeNumber;
+
+    if (decimalPart > 0) {
+      if (Math.abs(decimalPart - 0.25) < 0.05)
+        return wholeNumber > 0 ? `${wholeNumber} 1/4` : '1/4';
+      if (Math.abs(decimalPart - 0.33) < 0.05)
+        return wholeNumber > 0 ? `${wholeNumber} 1/3` : '1/3';
+      if (Math.abs(decimalPart - 0.5) < 0.05)
+        return wholeNumber > 0 ? `${wholeNumber} 1/2` : '1/2';
+      if (Math.abs(decimalPart - 0.67) < 0.05)
+        return wholeNumber > 0 ? `${wholeNumber} 2/3` : '2/3';
+      if (Math.abs(decimalPart - 0.75) < 0.05)
+        return wholeNumber > 0 ? `${wholeNumber} 3/4` : '3/4';
+    }
+
+    return decimal;
+  }
+
   _generateMarkup() {
     return `
       <figure class="recipe__fig">
@@ -128,7 +170,7 @@ class RecipeView extends View {
     <use href="${icons}#icon-check"></use>
   </svg>
   <div class="recipe__quantity">${
-    ing.quantity ? new Fraction(ing.quantity).toString() : ''
+    ing.quantity ? this._formatFraction(ing.quantity) : ''
   }</div>
   <div class="recipe__description">
     <span class="recipe__unit">${ing.unit}</span>

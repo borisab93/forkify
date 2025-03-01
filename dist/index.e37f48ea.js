@@ -3312,7 +3312,7 @@ var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class PreviewView extends (0, _viewJsDefault.default) {
-    _parentElement = "document.querySelector(" * ")";
+    _parentElement = "";
     _generateMarkup() {
         const id = window.location.hash.slice(1);
         return `
@@ -3406,7 +3406,7 @@ var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class BookmarksView extends (0, _viewJsDefault.default) {
     _parentElement = document.querySelector(".bookmarks__list");
-    _errorMessage = "No bookmarks yet. Find a nice recipe and bookmark it;)";
+    _errorMessage = "No bookmarks yet. Find a nice recipe and bookmark it :)";
     _message = "";
     addHandlerRender(handler) {
         window.addEventListener("load", handler);

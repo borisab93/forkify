@@ -5,14 +5,15 @@
   "default": "index.html",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html --dist-dir ./dist"
+    "build": "parcel build index.html --no-optimize --dist-dir ./dist"
   },
   "author": "Boris Abramov",
   "license": "ISC",
   "dependencies": {
+    "caniuse-lite": "^1.0.30001701",
     "core-js": "^3.32.2",
     "fractional": "^1.0.0",
-    "parcel": "^2.0.0",
+    "parcel": "^2.9.3",
     "regenerator-runtime": "^0.14.0",
     "sass": "^1.26.10"
   },

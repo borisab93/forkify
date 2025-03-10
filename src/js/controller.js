@@ -15,7 +15,6 @@ if (module.hot) {
   module.hot.accept();
 }
 const controlRecipes = async function () {
-  // Loading recipe
   try {
     const id = window.location.hash.slice(1);
 
@@ -23,18 +22,33 @@ const controlRecipes = async function () {
     recipeView.renderSpinner();
 
     // update results view to mark selected search results
-    resultsView.update(model.getSearchResultsPage());
+    try {
+      resultsView.update(model.getSearchResultsPage());
+    } catch (err) {
+      console.error('Error updating results view:', err);
+    }
 
     // Update bookmarks view
-    bookmarksView.update(model.state.bookmarks);
+    try {
+      bookmarksView.update(model.state.bookmarks);
+    } catch (err) {
+      console.error('Error updating bookmarks view:', err);
+    }
 
     // Loading recipe
     await model.loadRecipe(id);
 
+    if (!model.state.recipe || !model.state.recipe.title) {
+      throw new Error('Could not load recipe data');
+    }
+
     // Rendering recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
-    recipeView.renderMessage();
+    console.error('Error in controlRecipes:', err);
+    recipeView.renderError(
+      `${err.message || 'Could not load recipe. Please try again!'}`
+    );
   }
 };
 

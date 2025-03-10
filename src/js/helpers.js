@@ -22,11 +22,23 @@ export const AJAX = async function (url, uploadData = undefined) {
       : fetch(url);
 
     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
-    const data = await res.json();
 
-    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Request failed with status ${res.status}`
+      );
+    }
+
+    const data = await res.json();
+    if (!data || !data.data) {
+      throw new Error('Invalid response format from API');
+    }
+
     return data;
   } catch (err) {
+    if (err.name === 'AbortError' || err.message.includes('timeout'))
+      throw new Error('Request took too long! Please try again.');
     throw err;
   }
 };
